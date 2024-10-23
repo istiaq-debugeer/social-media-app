@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block body %}
+
+   <div class="flex justify-center mt-5 p-10">
+        <h2 class="text-3xl font-semibold text-gray-500">My Posts</h2>
+   </div>
+   
+   <!-- Centering and displaying posts in a single column -->
+   <div class="flex justify-center">
+       <div class="flex flex-col gap-6 items-center w-full max-w-xl">
+            {% for post in posts %}
+            <a href="#" class="w-full">
+                <div class="rounded-lg overflow-hidden bg-white shadow-lg transition transform hover:scale-105 duration-300">
+                    
+                    <!-- User Info -->
+                    <div class="flex items-center p-4">
+                        <img class="h-10 w-10 rounded-full" src="{{ post.user.profile.photo.url }}" alt="Profile Photo">
+                        <span class="ml-4 text-xl font-semibold text-gray-800">{{ post.user }}</span>
+                    </div>
+
+                    <!-- Post Image -->
+                    <div class="overflow-hidden">
+                        <img class="w-full h-64 object-cover" src="{{ post.image.url }}" alt="Post Image">
+                    </div>
+
+                    <!-- Like Icon -->
+                    <div class="p-4 flex justify-between items-center">
+                        <div class="icon-container flex items-center space-x-2">
+                            <a id="{{post.id}}"class='btn-like'><i class="fa-regular fa-heart text-red-500"></i></a>
+                            <span class="text-gray-700 group-hover:text-gray-900">Like</span>
+                        </div>
+                        <div class="text-gray-500 group-hover:text-gray-800">
+                            <i class="fa-regular fa-comment"></i> Comment
+                        </div>
+                    </div>
+                    
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+   </div>
+
+{% endblock %}
