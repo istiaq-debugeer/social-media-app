@@ -1,4 +1,6 @@
+
 {% extends 'base.html' %}
+{%load mathfilters%}
 {% block body %}
 
    <div class="flex justify-center mt-5 p-10">
@@ -25,19 +27,55 @@
 
                     <!-- Like Icon -->
                     <div class="p-4 flex justify-between items-center">
+
                         <div class="icon-container flex items-center space-x-2">
-                            <a id="{{post.id}}"class='btn-like'><i class="fa-regular fa-heart text-red-500"></i></a>
-                            <span class="text-gray-700 group-hover:text-gray-900">Like</span>
+                            <a id="{{post.id}}"class='btn-like'>
+                            
+                                <button   class="group-hover:text-gray-900">Like</button></a>
+                            
+
                         </div>
                         <div class="text-gray-500 group-hover:text-gray-800">
                             <i class="fa-regular fa-comment"></i> Comment
                         </div>
                     </div>
-                    
+                    <div>
+                        {% if post.liked_by.count > 1 %}
+                            {{ post.liked_by.first }} & {{ post.liked_by.count|add:"-1" }} others like this
+                        {% elif post.liked_by.count == 1 %}
+                            {{ post.liked_by.first }} likes this
+                        {% else %}
+                            No likes yet
+                        {% endif %}
+                    </div>
+                    <div class="px-5 py-5">
+                        {%for comment in post.comment_post.all%}
+                            {{comment.body}}
+                    </br>
+                        {%endfor%}
+                    </div>
+                    <div >
+                        <form method="POST">
+                            {%csrf_token%}
+                            {form.as_p}
+                        </form>
+                    </div>
                 </div>
             </a>
             {% endfor %}
         </div>
    </div>
+   <script type="text/javascript">
+    window.CSRF_TOKEN="{{csrf_token}}"
+    $(document).on('click','.btn-like',function(){
+        var post_id=this.id
+        $.ajax({
+            method:"POST",
+            url:'/post/like',
+            data:{post_id:post_id,csrfmiddlewaretoken:window.CSRF_TOKEN}
+        })
+        window.location.href="http://127.0.0.1:8000/post/feed/"
+    })
+   </script>
 
 {% endblock %}
